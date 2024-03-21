@@ -1,7 +1,7 @@
 import { FC } from 'hono/jsx';
 
 export const Layout: FC = (props) => {
-	const title = props.title || 'Web Gaia';
+	const title = props.title || 'Aces Batch Manager';
 	const refresh = props.refresh;
 	return (
 		<html>
