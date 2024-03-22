@@ -9,9 +9,12 @@ app.use('/static/*', serveStatic({ root: './' }));
 app.use('/styles.css', serveStatic({ path: './styles.css' }));
 
 app.get('/', async (c) => {
+	const s = 'SELECT * FROM modules';
+	const r = await c.env.DB.prepare(s).all()
 	return c.html(
 		<Layout>
-			<h1>Hello Hono</h1>
+			<h1 class="text-xl font-bold m-5">Hello Hono</h1>
+			<pre class="text-[12px] text-red-500 m-5">{JSON.stringify(r.results, null, 2)}</pre>
 		</Layout>
 	);
 })

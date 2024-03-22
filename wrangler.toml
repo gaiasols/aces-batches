@@ -6,6 +6,12 @@ compatibility_flags = ["nodejs_compat"]
 [site]
 bucket = "./assets"
 
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "aces-batches"
+database_id = "1e3164da-a238-4ff1-bae0-f586bfb01829"
+preview_database_id = "1e3164da-a238-4ff1-bae0-f586bfb01829"
+
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
 # Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables

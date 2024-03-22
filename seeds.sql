@@ -1,7 +1,7 @@
 -- admins: 1
 INSERT INTO admins (id, fullname, username) VALUES
     (1, 'Admin Utama', 'admin');
--- assessors: 57
+-- assessors: 49
 INSERT INTO assessors (id, fullname, username) VALUES
     (1, 'Bakiman Bakiono', 'bakiman'),
     (2, 'Wanda Jati', 'wanda'),
@@ -51,129 +51,131 @@ INSERT INTO assessors (id, fullname, username) VALUES
     (46, 'Loes Elias', 'loes'),
     (47, 'Windriya Titah', 'windriya'),
     (48, 'Ayu Gunari', 'ayu123'),
-    (49, 'Tyas Batari Cahyo', 'tyas'),
-    (50, 'Basiran Darmaji', 'basiran'),
-    (51, 'Arisanti Thijs', 'arisanti'),
-    (52, 'Jamie Wasundari Warti', 'jamie'),
-    (53, 'Issac Martaka', 'issac'),
-    (54, 'Tirah Santiago', 'tirah'),
-    (55, 'Jouri Gamani', 'jouri'),
-    (56, 'Grayson Laksmi', 'grayson'),
-    (57, 'Darapuspita Kasti', 'darapuspita');
+    (49, 'Tyas Batari Cahyo', 'tyas');
 -- organizations: 3, starts from 11
 INSERT INTO organizations (id, name) VALUES
     (11, 'PT Agung Brajak Cunthi'),
     (12, 'PT Dinoyo Environment Futures'),
     (13, 'PT Guthe Harmoni Indonesia');
 -- tools: 9, with custom ids
-INSERT INTO tools (id, category, title, version) VALUES
-    -- id, category, title, version
-    ('SELF-01', 'self', 'GPQ', 'generic'),
-    ('SELF-02', 'self', 'GPQ + G-MATE', 'generic'),
-    ('SELF-03', 'self', 'GPQ + C-RATE', 'generic'),
-    ('CASE-01', 'case', 'Case Analysis', 'generic'),
-    ('CASE-02', 'case', 'Intray', 'generic'),
-    ('F2F-01', 'f2f', 'Wawancara', 'generic'),
-    ('F2F-02', 'f2f', 'Wawancara + Presentasi', 'generic'),
-    ('F2F-03', 'f2f', 'Roleplay', 'generic'),
-    ('GRP-01', 'lgd', 'LGD', 'generic');
+INSERT INTO modules (id, category, title, ascent) VALUES
+	('GPQ', 'SELF', 'GPQ', 1),
+	('GMATE', 'SELF', 'G-MATE', 0),
+	('CRATE', 'SELF', 'G-RATE', 0),
+	('CSI', 'SELF', 'CSI', 0),
+	('ABSTRACT', 'SELF', 'Abstract Reasoning', 0),
+	('NUMERICAL', 'SELF', 'Numerical Reasoning', 0),
+	('VERBAL', 'SELF', 'Verbal Reasoning', 0),
+	('GGATE', 'SELF', 'G-GATE', 0),
+	('AIME', 'SELF', 'AIME', 0),
+	('GPRO', 'SELF', 'G-PRO', 0),
+	('CASE-01', 'CASE', 'Case Analysis 1', 1),
+	('CASE-02', 'CASE', 'Case Analysis 2', 1),
+	('CASE-03', 'CASE', 'Case Analysis 3', 1),
+	('INTRAY-01', 'CASE', 'Intray 1', 0),
+	('SJT-01', 'CASE', 'SJT 1', 0),
+	('INTERVIEW', 'FACE', 'Interview', 1),
+	('PRESENTATION', 'FACE', 'Presentation', 1),
+	('LGD', 'DISC', 'LGD', 1),
+	('GPQ-GMATE', 'SELF', 'GPQ-GMATE', 1),
+	('GPQ-CRATE', 'SELF', 'GPQ-CRATE', 1);
 -- slot dummy, delete later
 INSERT INTO slots (id, modules, mode) VALUES (10, 1, 'SEED-SLOT');
 -- actual slots
 INSERT INTO slots (modules, mode, slot1, slot2, slot3, slot4) VALUES
-    (4, 'ALL-TYPES', 'f2f', 'self', 'case', 'lgd'),
-    (4, 'ALL-TYPES', 'self', 'case', 'lgd', 'f2f'),
-    (4, 'ALL-TYPES', 'case', 'lgd', 'f2f', 'self'),
-    (4, 'ALL-TYPES', 'lgd', 'f2f', 'self', 'case');
+    (4, 'ALL-TYPES', 'FACE', 'SELF', 'CASE', 'DISC'),
+    (4, 'ALL-TYPES', 'SELF', 'CASE', 'DISC', 'FACE'),
+    (4, 'ALL-TYPES', 'CASE', 'DISC', 'FACE', 'SELF'),
+    (4, 'ALL-TYPES', 'DISC', 'FACE', 'SELF', 'CASE');
 INSERT INTO slots (modules, mode, slot1, slot2, slot3, slot4) VALUES
-    -- 3-no-self
-    (3, 'NO-SELF', 'f2f', 'case', 'lgd', null),
-    (3, 'NO-SELF', 'case', 'lgd', 'f2f', null),
-    (3, 'NO-SELF', 'lgd', 'f2f', 'case', null),
+    -- 3-no-SELF
+    (3, 'NO-SELF', 'FACE', 'CASE', 'DISC', null),
+    (3, 'NO-SELF', 'CASE', 'DISC', 'FACE', null),
+    (3, 'NO-SELF', 'DISC', 'FACE', 'CASE', null),
     -- 3-no-group
-    (3, 'NO-GROUP', 'f2f', 'self', 'case', null),
-    (3, 'NO-GROUP', 'self', 'case', 'f2f', null),
-    (3, 'NO-GROUP', 'case', 'f2f', 'self', null),
-    -- 3-no-case
-    (3, 'NO-CASE', 'f2f', 'self', 'lgd', null),
-    (3, 'NO-CASE', 'self', 'lgd', 'f2f', null),
-    (3, 'NO-CASE', 'lgd', 'f2f', 'self', null),
-    -- 3-no-f2f
-    (3, 'NO-F2F', 'self', 'case', 'lgd', null),
-    (3, 'NO-F2F', 'case', 'lgd', 'self', null),
-    (3, 'NO-F2F', 'lgd', 'self', 'case', null);
+    (3, 'NO-DISC', 'FACE', 'SELF', 'CASE', null),
+    (3, 'NO-DISC', 'SELF', 'CASE', 'FACE', null),
+    (3, 'NO-DISC', 'CASE', 'FACE', 'SELF', null),
+    -- 3-no-CASE
+    (3, 'NO-CASE', 'FACE', 'SELF', 'DISC', null),
+    (3, 'NO-CASE', 'SELF', 'DISC', 'FACE', null),
+    (3, 'NO-CASE', 'DISC', 'FACE', 'SELF', null),
+    -- 3-no-FACE
+    (3, 'NO-FACE', 'SELF', 'CASE', 'DISC', null),
+    (3, 'NO-FACE', 'CASE', 'DISC', 'SELF', null),
+    (3, 'NO-FACE', 'DISC', 'SELF', 'CASE', null);
 INSERT INTO slots (modules, mode, slot1, slot2, slot3, slot4) VALUES
     -- Tanpa asesor
-    (2, 'SELF-CASE', 'self', 'case', null, null),
-    (2, 'SELF-CASE', null, null, 'self', 'case'),
+    (2, 'SELF-CASE', 'SELF', 'CASE', null, null),
+    (2, 'SELF-CASE', null, null, 'SELF', 'CASE'),
     --
-    (2, 'SELF-GROUP', 'self', 'lgd', null, null),
-    (2, 'SELF-GROUP', 'lgd', 'self', null, null),
-    (2, 'SELF-GROUP', null, null, 'self', 'lgd'),
-    (2, 'SELF-GROUP', null, null, 'lgd', 'self'),
+    (2, 'SELF-DISC', 'SELF', 'DISC', null, null),
+    (2, 'SELF-DISC', 'DISC', 'SELF', null, null),
+    (2, 'SELF-DISC', null, null, 'SELF', 'DISC'),
+    (2, 'SELF-DISC', null, null, 'DISC', 'SELF'),
     --
-    (2, 'SELF-F2F', 'self', 'f2f', null, null),
-    (2, 'SELF-F2F', 'f2f', 'self', null, null),
-    (2, 'SELF-F2F', null, null, 'self', 'f2f'),
-    (2, 'SELF-F2F', null, null, 'f2f', 'self'),
+    (2, 'SELF-FACE', 'SELF', 'FACE', null, null),
+    (2, 'SELF-FACE', 'FACE', 'SELF', null, null),
+    (2, 'SELF-FACE', null, null, 'SELF', 'FACE'),
+    (2, 'SELF-FACE', null, null, 'FACE', 'SELF'),
     --
-    (2, 'CASE-GROUP', 'case', 'lgd', null, null),
-    (2, 'CASE-GROUP', 'lgd', 'case', null, null),
-    (2, 'CASE-GROUP', null, null, 'case', 'lgd'),
-    (2, 'CASE-GROUP', null, null, 'lgd', 'case'),
+    (2, 'CASE-DISC', 'CASE', 'DISC', null, null),
+    (2, 'CASE-DISC', 'DISC', 'CASE', null, null),
+    (2, 'CASE-DISC', null, null, 'CASE', 'DISC'),
+    (2, 'CASE-DISC', null, null, 'DISC', 'CASE'),
     --
-    (2, 'CASE-F2F', 'case', 'f2f', null, null),
-    (2, 'CASE-F2F', 'f2f', 'case', null, null),
-    (2, 'CASE-F2F', null, null, 'case', 'f2f'),
-    (2, 'CASE-F2F', null, null, 'f2f', 'case'),
+    (2, 'CASE-FACE', 'CASE', 'FACE', null, null),
+    (2, 'CASE-FACE', 'FACE', 'CASE', null, null),
+    (2, 'CASE-FACE', null, null, 'CASE', 'FACE'),
+    (2, 'CASE-FACE', null, null, 'FACE', 'CASE'),
     --
-    (2, 'GROUP-F2F', 'lgd', 'f2f', null, null),
-    (2, 'GROUP-F2F', 'f2f', 'lgd', null, null),
-    (2, 'GROUP-F2F', null, null, 'lgd', 'f2f'),
-    (2, 'GROUP-F2F', null, null, 'f2f', 'lgd');
+    (2, 'DISC-FACE', 'DISC', 'FACE', null, null),
+    (2, 'DISC-FACE', 'FACE', 'DISC', null, null),
+    (2, 'DISC-FACE', null, null, 'DISC', 'FACE'),
+    (2, 'DISC-FACE', null, null, 'FACE', 'DISC');
 INSERT INTO slots (modules, mode, slot1, slot2, slot3, slot4) VALUES
-    (1, 'SELF-ONLY', 'self', null, null, null),
-    (1, 'SELF-ONLY', null, 'self', null, null),
-    (1, 'SELF-ONLY', null, null, 'self', null),
-    (1, 'SELF-ONLY', null, null, null, 'self'),
+    (1, 'SELF-ONLY', 'SELF', null, null, null),
+    (1, 'SELF-ONLY', null, 'SELF', null, null),
+    (1, 'SELF-ONLY', null, null, 'SELF', null),
+    (1, 'SELF-ONLY', null, null, null, 'SELF'),
     --
-    (1, 'CASE-ONLY', 'case', null, null, null),
-    (1, 'CASE-ONLY', null, 'case', null, null),
-    (1, 'CASE-ONLY', null, null, 'case', null),
-    (1, 'CASE-ONLY', null, null, null, 'case'),
+    (1, 'CASE-ONLY', 'CASE', null, null, null),
+    (1, 'CASE-ONLY', null, 'CASE', null, null),
+    (1, 'CASE-ONLY', null, null, 'CASE', null),
+    (1, 'CASE-ONLY', null, null, null, 'CASE'),
     --
-    (1, 'F2F-ONLY', 'f2f', null, null, null),
-    (1, 'F2F-ONLY', null, 'f2f', null, null),
-    (1, 'F2F-ONLY', null, null, 'f2f', null),
-    (1, 'F2F-ONLY', null, null, null, 'f2f'),
+    (1, 'FACE-ONLY', 'FACE', null, null, null),
+    (1, 'FACE-ONLY', null, 'FACE', null, null),
+    (1, 'FACE-ONLY', null, null, 'FACE', null),
+    (1, 'FACE-ONLY', null, null, null, 'FACE'),
     --
-    (1, 'GROUP-ONLY', 'lgd', null, null, null),
-    (1, 'GROUP-ONLY', null, 'lgd', null, null),
-    (1, 'GROUP-ONLY', null, null, 'lgd', null),
-    (1, 'GROUP-ONLY', null, null, null, 'lgd');
+    (1, 'DISC-ONLY', 'DISC', null, null, null),
+    (1, 'DISC-ONLY', null, 'DISC', null, null),
+    (1, 'DISC-ONLY', null, null, 'DISC', null),
+    (1, 'DISC-ONLY', null, null, null, 'DISC');
 DELETE FROM slots WHERE id=10;
 -- UPDATE SLOTS
-UPDATE slots SET self_pos=1 WHERE slot1='self';
-UPDATE slots SET self_pos=2 WHERE slot2='self';
-UPDATE slots SET self_pos=3 WHERE slot3='self';
-UPDATE slots SET self_pos=4 WHERE slot4='self';
-UPDATE slots SET case_pos=1 WHERE slot1='case';
-UPDATE slots SET case_pos=2 WHERE slot2='case';
-UPDATE slots SET case_pos=3 WHERE slot3='case';
-UPDATE slots SET case_pos=4 WHERE slot4='case';
+UPDATE slots SET self_pos=1 WHERE slot1='SELF';
+UPDATE slots SET self_pos=2 WHERE slot2='SELF';
+UPDATE slots SET self_pos=3 WHERE slot3='SELF';
+UPDATE slots SET self_pos=4 WHERE slot4='SELF';
+UPDATE slots SET case_pos=1 WHERE slot1='CASE';
+UPDATE slots SET case_pos=2 WHERE slot2='CASE';
+UPDATE slots SET case_pos=3 WHERE slot3='CASE';
+UPDATE slots SET case_pos=4 WHERE slot4='CASE';
 -- UPDATE slots SET face_pos=1 WHERE slot1='face';
 -- UPDATE slots SET lead_pos=1 WHERE slot1='lead';
-UPDATE slots SET f2f_pos=1 WHERE slot1='f2f';
-UPDATE slots SET f2f_pos=2 WHERE slot2='f2f';
-UPDATE slots SET f2f_pos=3 WHERE slot3='f2f';
-UPDATE slots SET f2f_pos=4 WHERE slot4='f2f';
-UPDATE slots SET lgd_pos=1 WHERE slot1='lgd';
-UPDATE slots SET lgd_pos=2 WHERE slot2='lgd';
-UPDATE slots SET lgd_pos=3 WHERE slot3='lgd';
-UPDATE slots SET lgd_pos=4 WHERE slot4='lgd';
--- Batches, starts from 1101
-INSERT INTO batches (id, token, org_id, date, name) VALUES
-    (101, '292721', 11, '2024-01-01', 'Batch'),
-    (102, '001007', 12, '2024-01-03', 'Batch'),
-    (104, '100121', 11, '2024-01-06', 'Batch'),
-    (103, '820054', 13, '2024-01-05', 'Batch');
+UPDATE slots SET face_pos=1 WHERE slot1='FACE';
+UPDATE slots SET face_pos=2 WHERE slot2='FACE';
+UPDATE slots SET face_pos=3 WHERE slot3='FACE';
+UPDATE slots SET face_pos=4 WHERE slot4='FACE';
+UPDATE slots SET disc_pos=1 WHERE slot1='DISC';
+UPDATE slots SET disc_pos=2 WHERE slot2='DISC';
+UPDATE slots SET disc_pos=3 WHERE slot3='DISC';
+UPDATE slots SET disc_pos=4 WHERE slot4='DISC';
+-- batch_id starts 101, org starts 11
+INSERT INTO batches (id, token, org_id, type, date) VALUES
+	(101, '101921', 11, 'ASCENT', '2024-03-28'),
+	(102, '102280', 12, 'CUSTOM', '2024-04-18'),
+	(103, '103006', 13, 'ASCENT', '2024-05-03');
+
