@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { Layout } from "./layout";
 import { serveStatic } from "hono/cloudflare-workers";
 // import manifest from '__STATIC_CONTENT_MANIFEST';
+import { app as dev } from "./dev"
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -19,4 +20,5 @@ app.get('/', async (c) => {
 	);
 })
 
+app.route('/dev', dev)
 export default app;

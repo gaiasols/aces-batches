@@ -72,7 +72,7 @@ INSERT INTO modules (id, category, title, ascent) VALUES
 	('CASE-01', 'CASE', 'Case Analysis 1', 1),
 	('CASE-02', 'CASE', 'Case Analysis 2', 1),
 	('CASE-03', 'CASE', 'Case Analysis 3', 1),
-	('INTRAY-01', 'CASE', 'Intray 1', 0),
+	('INTRAY-01', 'CASE', 'Intray 1', 1),
 	('SJT-01', 'CASE', 'SJT 1', 0),
 	('INTERVIEW', 'FACE', 'Interview', 1),
 	('PRESENTATION', 'FACE', 'Presentation', 1),

@@ -70,7 +70,7 @@ DROP TABLE IF EXISTS batches; CREATE TABLE batches (
 
 DROP TABLE IF EXISTS batch_modules; CREATE TABLE batch_modules (
 	[batch_id] INTEGER NOT NULL,
-	[module_id] INTEGER NOT NULL,
+	[module_id] TEXT NOT NULL,
 	[type] TEXT NOT NULL, -- 'SELF', 'CASE', 'FACE', 'DISC'
 	PRIMARY KEY (batch_id, module_id)
 );
