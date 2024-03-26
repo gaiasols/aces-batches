@@ -1,3 +1,19 @@
+export function randomToken() {
+	return '012345678901234567890123456789'
+		.split('')
+		.sort(() => Math.random() - 0.5)
+		.join('')
+		.substring(0, 6);
+}
+
+export function uniqueToken(tokens: string[]) {
+	let token = tokens[0];
+	while (tokens.includes(token)) {
+		token = randomToken();
+	}
+	return token;
+}
+
 export async function getBatchModulesData(db: D1Database, batch_id: number | string, priority = false) {
 	const stm0 = 'SELECT * FROM v_batches WHERE id=?';
 	const stm1 = priority

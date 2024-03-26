@@ -7,7 +7,7 @@ import { app as htmx } from "./htmx";
 import { ACSelectModule, BatchForm, BatchHero, BatchMenu, DaftarPeserta, FormSettingsDateTitle, FormSettingsModules, Main, Mainmenu, PRE, SettingsDateTitle, SettingsInfo, SettingsModules, UploadPersonsCSV } from "./components";
 import { html } from "hono/html";
 import { randomNames, randomNamesAndUsernames } from "./names";
-import { getBatchModulesData } from "./utils";
+import { getBatchModulesData, uniqueToken } from "./utils";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -25,27 +25,6 @@ app.get('/', async (c) => {
 	);
 })
 
-const newBatchToken = (tokens: string[]) => {
-	let token = tokens[0];
-	while (tokens.includes(token)) {
-		token = '012345678901234567890123456789'
-			.split('')
-			.sort(() => Math.random() - 0.5)
-			.join('')
-			.substring(0, 6);
-	}
-	return token;
-}
-
-app.get('/token', async (c) => {
-	const tokens: string[] = [
-		'949580', '495027', '472599', '807056', '102463', '985291', '042701', '910534', '233677', '012480', '359912', '401527', '153149', '089031', '769115', '535017', '467319', '136527', '089354', '194406', '610677', '162075', '116392', '086601', '598140', '065190', '822910', '721370', '613107', '542465', '817335', '340791', '034371', '098846', '672381', '870133', '372057', '418029', '960285', '475033', '141272', '010265', '068176', '060118', '429761', '403132', '958247', '746512', '800142', '746971', '227463', '993606', '164318', '042509', '861360', '671929', '320659', '962351', '408206', '706489', '170958', '062954', '496514', '720062', '709831', '264103', '173762', '536748', '501399', '467323', '474171', '037058', '658109', '904816', '213869', '450504', '567323', '676954', '672681', '729089', '468354', '158169', '664946', '773916', '853802', '242998', '377061', '162873', '204819', '560213', '468806', '508562', '748007', '320866', '381025', '672642', '432470', '393742', '020965', '011450'
-	];
-	const t = newBatchToken(tokens);
-
-	return c.text(t + "\n" + tokens.join(' '));
-})
-
 app.post('/orgs', async (c) => {
 	const { org_id, date, type, title } = await c.req.parseBody();
 	const stm0 = 'SELECT max(id) + 1 as next_id FROM batches';
@@ -54,10 +33,10 @@ app.post('/orgs', async (c) => {
 	const rs = await db.batch([ db.prepare(stm0), db.prepare(stm1) ]);
 	const next_id = (rs[0].results[0] as any).next_id || 0;
 	const tokens = rs[1].results.map((v: any) => v.token);
-	const new_token = newBatchToken(tokens);
+	const token = uniqueToken(tokens);
 
 	const stm2 = 'INSERT INTO batches (id, token, org_id, type, title, date) VALUES (?,?,?,?,?,?)';
-	await db.prepare(stm2).bind(next_id, new_token, org_id, type, title, date).run();
+	await db.prepare(stm2).bind(next_id, token, org_id, type, title, date).run();
 	return c.redirect(`/batches/${next_id}`);
 })
 
