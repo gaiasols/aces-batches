@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS admins; CREATE TABLE admins (
   [fullname] TEXT NOT NULL,
   [username] TEXT NOT NULL,
   [email] TEXT UNIQUE,
+	[hash] TEXT,
 	[created] TEXT NOT NULL DEFAULT (datetime('now')||'Z'),
 	[updated] TEXT
 );
@@ -12,6 +13,7 @@ DROP TABLE IF EXISTS assessors; CREATE TABLE assessors (
   [fullname] TEXT NOT NULL,
   [username] TEXT NOT NULL,
   [email] TEXT UNIQUE,
+	[hash] TEXT,
 	[created] TEXT NOT NULL DEFAULT (datetime('now')||'Z'),
 	[updated] TEXT
 );
@@ -83,6 +85,7 @@ DROP TABLE IF EXISTS persons; CREATE TABLE persons (
   [fullname] TEXT NOT NULL,
   [username] TEXT NOT NULL,
   [email] TEXT,
+	[hash] TEXT,
 	[created] TEXT NOT NULL DEFAULT (datetime('now')||'Z'),
 	[updated] TEXT,
   UNIQUE(batch_id, email)

@@ -1,4 +1,5 @@
 import { html } from "hono/html";
+import { decrypt } from "./crypto";
 
 export const LockSVG = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
@@ -32,6 +33,38 @@ export const ButtonOpen = (props: { id?: string }) => (
 			/>
 		</svg>
 	</button>
+);
+
+export const LoginForm = (props: { username?: string; password?: string }) => (
+	<div>
+		<form hx-post="/login" hx-target="closest div" class="max-w-sm mb-6">
+			<table class="w-full">
+				<tr>
+					<td width="26%" class="pr-4 pb-3">
+						Username:
+					</td>
+					<td class="pb-3">
+						<input class="w-full" type="text" name="username" placeholder="Your username" value={props.username} />
+					</td>
+				</tr>
+				<tr>
+					<td class="pr-4 pb-3">Password:</td>
+					<td class="pb-3">
+						<input class="w-full" type="password" name="password" placeholder="Your password" value={props.password} />
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<button class="button w-full h-12">Submit</button>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<p id="msg" class="h5 text-sm text-orange-600">
+			{props.username != undefined && '🤬 Username dan/atau password salah'}
+		</p>
+	</div>
 );
 
 export const Mainmenu = () => (
@@ -178,26 +211,26 @@ export const ACSelectModule = (props: { name: string; label: string; modules: an
 
 export const SettingsInfo = (props: { batch: VBatch }) => (
 	<div class="rounded border border-stone-300 px-4 pt-2 pb-3 my-5">
-		{/* <form method="post" class="text-[15px] mb-1"> */}
-		<table class="w-full mb-1">
-			<tbody>
-				<tr>
-					<td width="26%" class="text-nowrap pt-2 pr-2">
-						Organization:
-					</td>
-					<td class="font-bold pt-2">{props.batch.org_name}</td>
-				</tr>
-				<tr>
-					<td class="text-nowrap pt-4 pr-2">Batch Type:</td>
-					<td class="font-bold pt-2">{props.batch.type}</td>
-				</tr>
-				<tr>
-					<td class="text-nowrap pt-4 pr-2">Date Created:</td>
-					<td class="font--bold pt-2">{props.batch.created}</td>
-				</tr>
-			</tbody>
-		</table>
-		{/* </form> */}
+		<div class="pr-6">
+			<table class="w-full mb-1">
+				<tbody>
+					<tr>
+						<td width="26%" class="text-nowrap pt-2 pr-2">
+							Organization:
+						</td>
+						<td class="font-bold pt-2">{props.batch.org_name}</td>
+					</tr>
+					<tr>
+						<td class="text-nowrap pt-4 pr-2">Batch Type:</td>
+						<td class="font-bold pt-2">{props.batch.type}</td>
+					</tr>
+					<tr>
+						<td class="text-nowrap pt-4 pr-2">Date Created:</td>
+						<td class="font--bold pt-2">{props.batch.created}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 );
 
@@ -214,7 +247,7 @@ export const SettingsDateTitle = (props: { batch: VBatch }) => (
 					<LockSVG />
 				</button>
 			</div>
-			<form class="text-[15px] mb-0">
+			<form class="text-[15px] pr-6 mb-0">
 				<table class="w-full">
 					<tbody>
 						<tr>
@@ -222,7 +255,7 @@ export const SettingsDateTitle = (props: { batch: VBatch }) => (
 								Date:
 							</td>
 							<td class="pt-2">
-								<input readonly type="date" name="date" class="input w-32" value={props.batch.date} />
+								<input readonly type="date" name="date" class="input w-36" value={props.batch.date} />
 							</td>
 						</tr>
 						<tr>
@@ -253,7 +286,7 @@ export const FormSettingsDateTitle = (props: { batch: VBatch }) => (
 	<div id="date-title" class="rounded border border-stone-300 px-4 pr-2 pt-2 pb-3 my-5">
 		<div class="relative ">
 			<form
-			class="text-[15px] mb-0"
+			class="text-[15px] pr-6 mb-0"
 			hx-post={`/htmx/batches/${props.batch.id}/date-title`}
 			hx-target="#date-title"
 			hx-swap="outerHTML"
@@ -265,7 +298,7 @@ export const FormSettingsDateTitle = (props: { batch: VBatch }) => (
 								Date:
 							</td>
 							<td class="pt-2">
-								<input type="date" name="date" class="input w-32" value={props.batch.date} />
+								<input type="date" name="date" class="input w-36" value={props.batch.date} />
 							</td>
 						</tr>
 						<tr>
@@ -565,15 +598,17 @@ export const DaftarPeserta = (props: { persons: any[] }) => (
 		<h3 class="text-stone-600 font-medium uppercase mb-3">Daftar Peserta Batch</h3>
 		<table class="w-full border-t border-stone-500">
 			<tbody>
-				{props.persons.map((p: any, i: number) => (
+				{props.persons.map(async (p: any, i: number) => (
 					<tr class="border-b border-stone-300 cursor-pointer hover:text-sky-500">
 						<td class="w-8 pr-2 py-3">{i + 1}</td>
 						<td class="pr-2 py-3">{p.fullname}</td>
 						<td class="pr-2 py-3">{p.username}</td>
+						<td class="text-sm text-right font-mono pr-2 py-3">{p.hash}</td>
+						{/* <td class="text-sm text-right font-mono pr-2 py-3">{await decrypt(p.hash)}</td> */}
 					</tr>
 				))}
 			</tbody>
 		</table>
-		<PRE obj={props.persons[props.persons.length -1]} />
+		<PRE obj={props.persons[props.persons.length - 1]} />
 	</div>
 );

@@ -1,3 +1,9 @@
+import { Context } from 'hono';
+import { encrypt } from './crypto';
+import { randomNames } from './names';
+import { getCookie } from 'hono/cookie';
+import { unsealData } from 'iron-session';
+
 export function randomToken() {
 	return '012345678901234567890123456789'
 		.split('')
@@ -26,4 +32,24 @@ export async function getBatchModulesData(db: D1Database, batch_id: number | str
 		selections: rs[1].results.map((x: any) => x.category + ':' + x.module_id),
 		modules: rs[2].results as Module[],
 	};
+}
+
+export async function randomPersonsWithPassword(n = 20) {
+	const array = [];
+	const names = randomNames(n);
+	for (let i = 0; i < n; i++) {
+		let username = names[i].toLocaleLowerCase().split(' ')[0];
+		if (username.length < 4) username += '123';
+		// const hash = await encrypt(username);
+		const hash = await encrypt(randomToken());
+		array.push({ name: names[i], username, hash });
+	}
+	return array;
+}
+
+export async function getSessionUser(c: Context) {
+	const cookie = getCookie(c, c.env.COOKIE_NAME);
+	if (!cookie) return null;
+	const user = await unsealData(cookie, { password: c.env.COOKIE_PASSWORD });
+	return user as unknown as Admin;
 }
