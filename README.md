@@ -5,3 +5,5 @@ Ada dua tipe batch: **ascent** dan **custom**. Batch tipe **ascent** merujuk *As
 Add a line test commit and push.
 
 Add a line after repo transfered to gaiasols.
+
+Muslax adds a line.
