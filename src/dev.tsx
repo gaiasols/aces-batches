@@ -9,13 +9,63 @@ const app = new Hono<{ Bindings: Env }>();
 app.get('/', async (c) => {
 	return c.html(
 		<Layout>
-			<div class="max-w-xl px-5">
+			<div class="max-w-xl">
 				<h1 class="text-2xl font-bold mt-5 mb-5">Judul Laman</h1>
 				<p class="text-base">text-base</p>
 				<p class="text-base">text-base</p>
 				<p class="text-base">text-base</p>
 				<p class="text-base">text-base</p>
 				<p class="text-base">text-base</p>
+
+				<div class="flex flex-col gap-2 text-[15px] my-8">
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<input type="text" value="Komunikasi" class="flex-grow input" />
+					</div>
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<div class="flex items-center gap-3 py-1">
+							<label class="flex items-center gap-1">
+								<input type="radio" name="JJJ" />
+								<span>RADIO</span>
+							</label>
+							<label class="flex items-center gap-1">
+								<input type="radio" name="JJJ" />
+								<span>RADIO</span>
+							</label>
+						</div>
+					</div>
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<input type="text" value="Komunikasi" class="input" />
+					</div>
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<select class="select flex-grow">
+							<option>Option 1</option>
+							<option>Option 2</option>
+							<option>Option 3</option>
+							<option>Option 4</option>
+						</select>
+					</div>
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<button class="button">Button</button>
+						<button disabled class="button">
+							Button
+						</button>
+					</div>
+					<div class="flex items-center gap-2">
+						<label class="shrink-0">Komunikasi:</label>
+						<button class="button-hollow">Button</button>
+						<button disabled class="button-hollow">
+							Button
+						</button>
+					</div>
+				</div>
+
+
+
 				<p class="mb-4">
 					<span class="font-bold">default (16px)</span> New Yorkers are facing the winter chill with less warmth this year as the city's
 					most revered soup stand unexpectedly shutters, following a series of events that have left the community puzzled.
@@ -38,53 +88,6 @@ app.get('/', async (c) => {
 				<h2 class="text-xl font-bold mb-5">H2 text-xl font-bold</h2>
 
 				<h3 class="text-lg font-bold mb-5">H3 text-lg font-bold</h3>
-				<div class="flex items-center text-[15px] gap-4 mb-5">
-					<label class="flex items-center gap-1">
-						<input type="checkbox" />
-						<span>CHECKBOX</span>
-					</label>
-					<label class="flex items-center gap-1">
-						<input type="radio" name="JJJ" />
-						<span>RADIO</span>
-					</label>
-					<label class="flex items-center gap-1">
-						<input type="radio" name="JJJ" />
-						<span>RADIO</span>
-					</label>
-					<label class="flex items-center gap-2">
-						<span>SEL:</span>
-						{/* center_top_1rem */}
-						{/* style="background-position:right 0.15rem center" */}
-						<select class="select">
-							<option>Option 1</option>
-							<option>Option 2</option>
-							<option>Option 3</option>
-							<option>Option 4</option>
-						</select>
-					</label>
-				</div>
-				<div class="mb-2">
-					<div class="flex items-center gap-2">
-						<button disabled class="btn">
-							Button
-						</button>
-						<button class="btn">Button</button>
-						<button disabled class="btn-small">
-							Button
-						</button>
-						<button class="btn-small">Small Button</button>
-					</div>
-				</div>
-				<div class="mb-5">
-					<div class="flex items-center gap-2">
-						<a href="#" class="btn-link">
-							Link Button
-						</a>
-						<a href="#" class="btn-link-hollow">
-							Link Button
-						</a>
-					</div>
-				</div>
 			</div>
 			<div class="h-64"></div>
 		</Layout>
@@ -93,7 +96,7 @@ app.get('/', async (c) => {
 
 app.post('/modules', async (c) => {
 	const body = await c.req.parseBody();
-	// console.log(body)
+	console.log(body)
 	const batch_id = body.batch_id;
 	const type = body.type;
 	const selected = body['mod[]'];
@@ -167,43 +170,60 @@ const CustomSelectModule = (props: { modules: any[]; isself: boolean; selections
 };
 
 app.get('/modules', async (c) => {
-	const stm0 = 'SELECT * FROM modules';
-	const rs = await c.env.DB.prepare(stm0).all();
-	const modules: any[] = rs.results;
-	const selections = ['GPQ', 'INTERVIEW'];
+	const db = c.env.DB;
+	// ==================
+	const batch_id = 102;
+	// ==================
+	const stm0 = 'SELECT * FROM batches WHERE id=?';
+	const stm1 = 'SELECT * FROM batch_modules WHERE batch_id=?';
+	const stm2 = 'SELECT * FROM modules';
+	// const rs = await c.env.DB.prepare(stm0).all();
+	const rs = await db.batch([
+		db.prepare(stm0).bind(batch_id),
+		db.prepare(stm1).bind(batch_id),
+		db.prepare(stm2),
+	]);
+	const batch:any = rs[0].results[0];
+	const modules: any[] = rs[2].results;
+	const selections = rs[1].results.map((x:any) => x.module_id);
+	console.log(selections);
 	return c.html(
 		<Layout>
 			<div class="max-w-xl px-5">
-				<h1 class="text-xl mt-5 mb-5">Modules</h1>
+				<h1 class="text-xl mt-5 mb-5">Modules ({batch.type})</h1>
 				<p class="mb-5">Default font size: 16px</p>
-				<form method="post" class="text-[15px] mb-6">
-					<input type="hidden" name="type" value="CUSTOM" />
-					<input type="hidden" name="batch_id" value="009" />
-					<p class="mb-2">Form with font size of 15px</p>
-					<div class="flex gap-4 mb-6">
-						<CustomSelectModule modules={modules} isself={true} selections={selections} />
-						<CustomSelectModule modules={modules} isself={false} selections={selections} />
-					</div>
-					<button disabled id="btn" class="btn">
-						SAVE
-					</button>
-				</form>
-
-				<form method="post" class="text-[15px] mb-6">
-					<input type="hidden" name="type" value="ASCENT" />
-					<input type="hidden" name="batch_id" value="009" />
-					<p class="mb-2">Ascent Modules Form</p>
-					<div class="flex flex-col gap-2 mb-6">
-						<ACSelectModule name="self" label="Selftest" modules={modules} cat="SELF" selections={[]} />
-						<ACSelectModule name="case" label="Case-Based" modules={modules} cat="CASE" selections={['INTRAY-01']} />
-						<ACSelectModule name="face" label="Face to Face" modules={modules} cat="FACE" selections={[]} />
-						<ACSelectModule name="disc" label="Discusiion" modules={modules} cat="DISC" selections={[]} />
-					</div>
-					<button id="btn2" class="btn">
-						SAVE
-					</button>
-					<div></div>
-				</form>
+				{/* <pre class="text-[11px] text-rose-500 mb-4">{JSON.stringify(selections, null, 4)}</pre> */}
+				{batch.type == 'ASCENT' && (
+					<form method="post" class="text-[15px] mb-6">
+						<input type="hidden" name="type" value="ASCENT" />
+						<input type="hidden" name="batch_id" value={batch_id} />
+						<p class="mb-2">Ascent Modules Form</p>
+						<div class="flex flex-col gap-2 mb-6">
+							<ACSelectModule name="self" label="Selftest" modules={modules} cat="SELF" selections={selections} />
+							<ACSelectModule name="case" label="Case-Based" modules={modules} cat="CASE" selections={selections} />
+							<ACSelectModule name="face" label="Face to Face" modules={modules} cat="FACE" selections={selections} />
+							<ACSelectModule name="disc" label="Discusiion" modules={modules} cat="DISC" selections={selections} />
+						</div>
+						<button id="btn2" class="btn">
+							SAVE
+						</button>
+						<div></div>
+					</form>
+				)}
+				{batch.type != 'ASCENT' && (
+					<form method="post" class="text-[15px] mb-6">
+						<input type="hidden" name="type" value="CUSTOM" />
+						<input type="hidden" name="batch_id" value={batch_id} />
+						<p class="mb-2">Form with font size of 15px</p>
+						<div class="flex gap-4 mb-6">
+							<CustomSelectModule modules={modules} isself={true} selections={selections} />
+							<CustomSelectModule modules={modules} isself={false} selections={selections} />
+						</div>
+						<button disabled id="btn" class="btn">
+							SAVE
+						</button>
+					</form>
+				)}
 			</div>
 			{html`<script>
 				const btn = document.getElementById('btn');

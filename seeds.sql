@@ -59,26 +59,27 @@ INSERT INTO organizations (id, name) VALUES
     (13, 'PT Guthe Harmoni Indonesia');
 -- tools: 9, with custom ids
 INSERT INTO modules (id, category, title, ascent) VALUES
-	('GPQ', 'SELF', 'GPQ', 1),
-	('GMATE', 'SELF', 'G-MATE', 0),
-	('CRATE', 'SELF', 'G-RATE', 0),
-	('CSI', 'SELF', 'CSI', 0),
-	('ABSTRACT', 'SELF', 'Abstract Reasoning', 0),
-	('NUMERICAL', 'SELF', 'Numerical Reasoning', 0),
-	('VERBAL', 'SELF', 'Verbal Reasoning', 0),
-	('GGATE', 'SELF', 'G-GATE', 0),
-	('AIME', 'SELF', 'AIME', 0),
-	('GPRO', 'SELF', 'G-PRO', 0),
+	('GPQ-01', 'SELF', 'GPQ', 1),
+	('GMATE-01', 'SELF', 'G-MATE', 0),
+	('CRATE-01', 'SELF', 'C-RATE', 0),
+	('CSI-01', 'SELF', 'CSI', 0),
+	('GGATE-01', 'SELF', 'G-GATE', 0),
+	('AIME-01', 'SELF', 'AIME', 0),
+	('GPRO-01', 'SELF', 'G-PRO', 0),
 	('CASE-01', 'CASE', 'Case Analysis 1', 1),
 	('CASE-02', 'CASE', 'Case Analysis 2', 1),
 	('CASE-03', 'CASE', 'Case Analysis 3', 1),
-	('INTRAY-01', 'CASE', 'Intray 1', 1),
+	('INTRAY-01', 'CASE', 'Intray Type 1', 1),
+	('INTRAY-02', 'CASE', 'Intray Type 2', 1),
+	('INTRAY-03', 'CASE', 'Intray Type 3', 1),
 	('SJT-01', 'CASE', 'SJT 1', 0),
-	('INTERVIEW', 'FACE', 'Interview', 1),
-	('PRESENTATION', 'FACE', 'Presentation', 1),
-	('LGD', 'DISC', 'LGD', 1),
-	('GPQ-GMATE', 'SELF', 'GPQ-GMATE', 1),
-	('GPQ-CRATE', 'SELF', 'GPQ-CRATE', 1);
+	('INTERVIEW-01', 'FACE', 'Interview', 1),
+	('PRESENTATION-01', 'FACE', 'Presentation', 1),
+	('LGD-01', 'DISC', 'LGD Type 1', 1),
+	('LGD-02', 'DISC', 'LGD Type 2', 1),
+	('LGD-03', 'DISC', 'LGD Type 3', 1),
+	('GPQGMATE-01', 'SELF', 'GPQ & G-MATE', 1),
+	('GPQCRATE-01', 'SELF', 'GPQ & C-RATE', 1);
 -- slot dummy, delete later
 INSERT INTO slots (id, modules, mode) VALUES (10, 1, 'SEED-SLOT');
 -- actual slots

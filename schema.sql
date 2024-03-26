@@ -69,9 +69,10 @@ DROP TABLE IF EXISTS batches; CREATE TABLE batches (
 );
 
 DROP TABLE IF EXISTS batch_modules; CREATE TABLE batch_modules (
+	[category] TEXT NOT NULL, -- 'SELF', 'CASE', 'FACE', 'DISC'
 	[batch_id] INTEGER NOT NULL,
 	[module_id] TEXT NOT NULL,
-	[type] TEXT NOT NULL, -- 'SELF', 'CASE', 'FACE', 'DISC'
+	[priority] INTEGER, -- used for module ordering in custom assessment
 	PRIMARY KEY (batch_id, module_id)
 );
 
@@ -145,3 +146,13 @@ END;
 CREATE TRIGGER update_groupings AFTER UPDATE ON groupings
 	BEGIN UPDATE groupings SET updated = datetime('now')||'Z' WHERE id = NEW.id;
 END;
+
+-- views
+
+DROP VIEW IF EXISTS v_batches; CREATE VIEW v_batches AS SELECT
+	b.*,
+	o.name org_name,
+	(SELECT COUNT(*) from persons WHERE batch_id=b.id) persons,
+	(SELECT COUNT(*) from batch_modules WHERE batch_id=b.id) modules
+	FROM batches b
+	LEFT JOIN organizations o ON b.org_id=o.id;

@@ -18,7 +18,7 @@ export const Layout: FC = (props) => {
 				<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 			</head>
 			<body class="antialiased">
-				<div class="page">{props.children}</div>
+				<div class="min-h-screen px-4 sm:px-5 pb-60">{props.children}</div>
 			</body>
 		</html>
 	);
